@@ -1,0 +1,87 @@
+/* pages/index/index.wxss */
+.page { display: flex; flex-direction: column; height: 100vh; }
+
+.chat { flex: 1; overflow: hidden; }
+.inner { padding: 24rpx 24rpx 160rpx; }
+
+/* 欢迎区 */
+.welcome { text-align: center; padding: 60rpx 0 20rpx; }
+.mascot { width: 160rpx; height: 160rpx; border-radius: 44rpx; box-shadow: 0 10rpx 30rpx rgba(200,150,30,.25); }
+.hi { font-size: 40rpx; font-weight: 700; margin-top: 24rpx; }
+.hl { color: var(--gold-deep); }
+.sub { color: var(--muted); font-size: 26rpx; margin-top: 8rpx; }
+.chips { display: flex; flex-wrap: wrap; gap: 16rpx; justify-content: center; margin-top: 32rpx; }
+.chip {
+  background: var(--card); border: 1rpx solid var(--line); border-radius: 36rpx;
+  padding: 14rpx 26rpx; font-size: 26rpx; color: #5d5436;
+}
+
+/* 消息 */
+.msg { display: flex; gap: 16rpx; margin: 28rpx 0; }
+.msg.user { flex-direction: row-reverse; }
+.ava { width: 68rpx; height: 68rpx; border-radius: 20rpx; flex-shrink: 0; }
+.bubble {
+  max-width: 74%; padding: 20rpx 24rpx; border-radius: 28rpx;
+  background: var(--card); border: 1rpx solid var(--line); font-size: 30rpx;
+  word-break: break-all;
+}
+.msg.user .bubble { background: var(--gold); color: #3a2e00; border: none; }
+.cat {
+  display: inline-block; font-size: 22rpx; color: var(--muted); background: var(--cream);
+  border-radius: 12rpx; padding: 2rpx 14rpx; margin-bottom: 10rpx;
+}
+.content { white-space: pre-wrap; }
+
+/* 图片预览 */
+.imgs { display: flex; flex-wrap: wrap; gap: 12rpx; margin-top: 12rpx; }
+.pimg { width: 200rpx; height: 150rpx; border-radius: 12rpx; }
+
+/* 可下载文件 */
+.dl { margin-top: 16rpx; border-top: 1rpx dashed var(--line); padding-top: 12rpx; }
+.dl-title { font-size: 22rpx; color: var(--muted); margin-bottom: 8rpx; }
+.dl-item {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--green-soft); color: var(--green); border-radius: 14rpx;
+  padding: 14rpx 20rpx; font-size: 26rpx; margin: 8rpx 0;
+}
+.dl-go { font-size: 22rpx; opacity: .8; }
+
+/* 来源 */
+.sources { margin-top: 16rpx; border-top: 1rpx dashed var(--line); padding-top: 12rpx; }
+.src-title { font-size: 22rpx; color: var(--muted); margin-bottom: 6rpx; }
+.src { font-size: 22rpx; color: #6b6145; margin: 4rpx 0; }
+
+/* 打字指示 */
+.typing { display: flex; gap: 10rpx; padding: 10rpx 4rpx; }
+.dot { width: 14rpx; height: 14rpx; border-radius: 50%; background: var(--gold-deep); animation: blink 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: .2s; }
+.dot:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%,80%,100% { opacity: .25; } 40% { opacity: 1; } }
+
+/* 待发送附件 */
+.pending { display: flex; flex-wrap: wrap; gap: 12rpx; padding: 12rpx 24rpx 0; background: var(--card); }
+.pend {
+  background: var(--cream); border: 1rpx solid var(--line); border-radius: 14rpx;
+  padding: 8rpx 18rpx; font-size: 24rpx; color: #6b6145;
+}
+.px { color: var(--muted); margin-left: 6rpx; }
+
+/* 输入栏 */
+.composer {
+  display: flex; gap: 12rpx; align-items: center; padding: 16rpx 20rpx;
+  background: var(--card); border-top: 1rpx solid var(--line);
+}
+.tool {
+  width: 68rpx; height: 68rpx; border-radius: 20rpx; background: var(--bg);
+  display: flex; align-items: center; justify-content: center; font-size: 34rpx;
+}
+.ipt {
+  flex: 1; height: 76rpx; background: var(--bg); border-radius: 40rpx;
+  padding: 0 28rpx; font-size: 30rpx;
+}
+.send {
+  background: var(--gold); color: #3a2e00; border-radius: 36rpx;
+  font-size: 28rpx; padding: 0 30rpx; height: 76rpx; line-height: 76rpx; margin: 0;
+}
+.send[disabled] { opacity: .5; color: #3a2e00; }
+.tip { text-align: center; font-size: 22rpx; color: var(--muted); padding: 10rpx 0 20rpx; background: var(--card); }

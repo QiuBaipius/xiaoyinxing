@@ -1,0 +1,18 @@
+/* 全局样式 —— 银杏叶黄主题 */
+page {
+  --gold: #FFC53D;
+  --gold-deep: #F5A623;
+  --gold-light: #FFE9B3;
+  --green: #3E9A5B;
+  --cream: #FFF9E8;
+  --bg: #FAF5E9;
+  --card: #FFFFFF;
+  --text: #2F2A1F;
+  --muted: #8A7F5C;
+  --line: #F0E7CF;
+
+  background: var(--bg);
+  color: var(--text);
+  font-size: 30rpx;
+  line-height: 1.6;
+}

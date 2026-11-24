@@ -1,0 +1,72 @@
+<view class="page">
+  <scroll-view class="chat" scroll-y scroll-into-view="{{scrollIntoView}}" scroll-with-animation>
+    <view class="inner">
+      <!-- 欢迎区 -->
+      <view class="welcome" wx:if="{{showWelcome}}">
+        <image class="mascot" src="/images/mascot.jpg" mode="aspectFill" />
+        <view class="hi">你好，我是<text class="hl">小银杏</text></view>
+        <view class="sub">东北财经大学 · AI 校园助手</view>
+        <view class="chips">
+          <view class="chip" wx:for="{{suggestions}}" wx:key="*this"
+                data-q="{{item}}" bindtap="tapSuggestion">{{item}}</view>
+        </view>
+      </view>
+
+      <!-- 消息列表 -->
+      <view class="msg {{item.role}}" wx:for="{{messages}}" wx:key="index" id="msg-{{index}}">
+        <image class="ava" wx:if="{{item.role==='assistant'}}" src="/images/mascot.jpg" mode="aspectFill" />
+        <view class="bubble">
+          <view class="cat" wx:if="{{item.category}}">🔎 {{item.category}}</view>
+          <text class="content" user-select>{{item.content}}</text>
+
+          <!-- 用户发送的图片 -->
+          <view class="imgs" wx:if="{{item.images.length}}">
+            <image class="pimg" wx:for="{{item.images}}" wx:for-item="im" wx:key="*this" src="{{im}}" mode="aspectFill" />
+          </view>
+
+          <!-- 可下载文件 -->
+          <view class="dl" wx:if="{{item.files.length}}">
+            <view class="dl-title">📎 可下载文件</view>
+            <view class="dl-item" wx:for="{{item.files}}" wx:for-item="f" wx:key="url"
+                  data-url="{{f.url}}" data-name="{{f.name}}" bindtap="downloadFile">
+              📄 {{f.name}} <text class="dl-go">下载 ›</text>
+            </view>
+          </view>
+
+          <view class="sources" wx:if="{{item.sources.length}}">
+            <view class="src-title">参考来源（{{item.sources.length}}）</view>
+            <view class="src" wx:for="{{item.sources}}" wx:for-item="s" wx:key="title">
+              [{{index+1}}] {{s.title}}
+            </view>
+          </view>
+        </view>
+        <image class="ava" wx:if="{{item.role==='user'}}" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' rx='12' fill='%23FFE9B3'/%3E%3Ctext x='20' y='27' font-size='20' text-anchor='middle'%3E👤%3C/text%3E%3C/svg%3E" mode="aspectFill" />
+      </view>
+
+      <view class="typing" wx:if="{{sending}}">
+        <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 待发送附件 -->
+  <view class="pending" wx:if="{{images.length || files.length}}">
+    <view class="pend" wx:for="{{images}}" wx:key="*this" data-i="{{index}}" bindtap="removeImage">
+      🖼️ 图片 <text class="px">×</text>
+    </view>
+    <view class="pend" wx:for="{{files}}" wx:key="name" data-i="{{index}}" bindtap="removeFile">
+      📄 {{item.name}} <text class="px">×</text>
+    </view>
+  </view>
+
+  <!-- 输入栏 -->
+  <view class="composer">
+    <view class="tool" bindtap="chooseImage">🖼️</view>
+    <view class="tool" bindtap="chooseFile">📎</view>
+    <input class="ipt" placeholder="输入问题，或发送图片/文件…"
+           value="{{input}}" bindinput="onInput" confirm-type="send"
+           bindconfirm="send" disabled="{{sending}}" />
+    <button class="send" bindtap="send" disabled="{{sending}}">发送</button>
+  </view>
+  <view class="tip">支持发送图片、文件；重要事项请以官网通知为准</view>
+</view>
