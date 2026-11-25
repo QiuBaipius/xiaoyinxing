@@ -22,7 +22,7 @@ def _resolve_dir(raw: str) -> Path:
 
 class Settings:
     # ---- 大模型 ----
-    glm_api_key: str = os.getenv("GLM_API_KEY", "")
+    glm_api_key: str = os.getenv("GLM_API_KEY", "30da5e4c06fc47bcbe420399d096b024.JHpfCCWVvrcD6bO5")
     glm_model: str = os.getenv("GLM_MODEL", "glm-4.7-flash")
     # 模型降级链：按顺序尝试，遇到限流/404 自动切换下一个（401 视为密钥错误，不降级）
     glm_models: list = [m.strip() for m in os.getenv("GLM_MODELS", "glm-4.7-flash,glm-4-flash").split(",") if m.strip()]
