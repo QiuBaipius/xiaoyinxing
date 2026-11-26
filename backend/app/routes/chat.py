@@ -11,6 +11,7 @@ from fastapi.responses import StreamingResponse
 from ..config import settings
 from ..crawler.sites import CATEGORY_CN
 from ..fileparse import extract_text
+from ..kb.rerank import rerank
 from ..kb.store import store
 from ..llm import GLMError, client
 from ..schemas import ChatRequest, ChatResponse, FileRef, SourceRef
@@ -47,24 +48,37 @@ def _extract_attachments(attachments) -> str:
 
 
 def _find_files(query: str) -> List[FileRef]:
-    return [
+    files = [
         FileRef(name=f["name"], url=f["url"], description=f.get("description", ""))
-        for f in store.find_files(query, limit=5)
+        for f in store.find_files(query, limit=8)
     ]
+    if settings.enable_rerank and len(files) > 1:
+        keep = rerank(query, [{"title": f.name, "text": f.description} for f in files], on_fail="none")
+        # 为空表示「全部不相关」，直接过滤掉
+        files = [files[i] for i in keep]
+    return files[:5]
 
 
 def _build_context(query: str, category: str, audience: str, found_files: List[FileRef]):
-    """分级 RAG：L0 路由 + L1/L2 召回，返回上下文与来源。"""
+    """分级 RAG：L0 路由 + L1 召回 + L2 相关性精排，返回上下文与来源。"""
     route_cat = category or retriever.classify(query)
+    candidate_n = min(settings.candidate_k, 10)
     hits = retriever.retrieve(
         query,
-        top_k=settings.top_k,
+        top_k=candidate_n,
         category=route_cat,
         audience=audience or "",
     )
     if not hits and route_cat:
         # 分级过滤无结果时，退回全库召回
-        hits = retriever.retrieve(query, top_k=settings.top_k)
+        hits = retriever.retrieve(query, top_k=candidate_n)
+
+    # L2 相关性精排：只保留与问题直接相关的资料（过滤同分类的近似项）
+    if settings.enable_rerank and len(hits) > 1:
+        keep = rerank(query, hits)
+        # 精排为空（LLM 判定全部不相关）时，兜底保留最高分一条，避免上下文为空
+        hits = [hits[i] for i in keep] or hits[:1]
+    hits = hits[:settings.top_k]
 
     context_blocks = []
     sources: List[SourceRef] = []
@@ -118,7 +132,7 @@ async def chat(req: ChatRequest):
     if extra:
         user_message = req.message + "\n\n" + extra
 
-    # 2) 可下载文件检索（校历等）
+    # 2) 可下载文件检索（相关性由 L2 精排把关，只保留与问题直接相关的）
     found_files = _find_files(req.message) if req.use_rag else []
 
     # 3) 组装消息与 RAG 上下文

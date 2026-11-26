@@ -4,12 +4,23 @@ __pycache__/
 *.pyo
 .venv/
 venv/
+*.egg-info/
 
 # 密钥（务必不要上传）
 .env
 backend/.env
 
+# 本地实验 / 临时 / 非技术文件
+dify/
+~$*
+*.docx
+assets/
+/小银杏.jpg
+启动Dify.bat
+deploy*.log
+
 # 其它
 node_modules/
 *.log
 .DS_Store
+Thumbs.db

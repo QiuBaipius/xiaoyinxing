@@ -43,8 +43,8 @@ class Settings:
 
     # ---- 召回 ----
     top_k: int = int(os.getenv("TOP_K", "5"))
-    candidate_k: int = int(os.getenv("CANDIDATE_K", "20"))
-    enable_rerank: bool = _bool(os.getenv("ENABLE_RERANK", "0"), False)
+    candidate_k: int = int(os.getenv("CANDIDATE_K", "10"))
+    enable_rerank: bool = _bool(os.getenv("ENABLE_RERANK", "1"), True)
 
     # ---- 服务 ----
     host: str = os.getenv("HOST", "0.0.0.0")

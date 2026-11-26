@@ -27,14 +27,21 @@ def extract_text(name: str, data: str, mime: str = "") -> Optional[str]:
     text: Optional[str] = None
 
     try:
-        if ext in ("txt", "md", "csv", "log", "json") or "text/" in mime:
+        if ext in ("txt", "md", "csv", "log", "json", "py", "js", "html", "css", "xml",
+                   "yml", "yaml", "ini", "sql") or "text/" in mime:
             text = raw.decode("utf-8", "ignore")
         elif ext == "pdf" or "pdf" in mime:
             text = _extract_pdf(raw)
         elif ext in ("docx",) or "word" in mime:
             text = _extract_docx(raw)
-        elif ext in ("doc", "ppt", "pptx", "xls", "xlsx", "zip", "png", "jpg", "jpeg", "gif"):
-            return None  # 暂不支持的类型
+        elif mime.startswith(("video/", "audio/")) or ext in (
+            "mp4", "mov", "avi", "mkv", "webm", "flv", "wmv",
+            "mp3", "wav", "flac", "m4a", "aac", "doc", "ppt", "pptx",
+            "xls", "xlsx", "zip", "rar",
+        ):
+            return None  # 视频/音频/暂不支持的类型
+        elif b"\x00" in raw[:1024]:
+            return None  # 二进制文件
         else:
             text = raw.decode("utf-8", "ignore")
     except Exception:
